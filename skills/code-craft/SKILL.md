@@ -9,38 +9,56 @@ description: >
 
 # CodeCraft
 
-Implement only the requested change, using the project's established design and code conventions.
+Implement only the requested change, following the project's existing design and conventions.
 
 ## Principles
 
-- Follow KISS and YAGNI. Prefer fewer components and states, straightforward debugging, and maintainable code. Explain any necessary complexity and trade-offs.
-- Prioritize the main flow and common cases; address edge cases when reasonably likely or high-impact.
-- Do not invent second- or third-order requirements from hypothetical scenarios or introduce abstractions for speculative future needs.
-- Reuse existing structures, APIs, libraries, frameworks, and terminology. Prefer localized changes over unrelated refactoring.
-- Apply current rules to new or substantially changed code; do not restyle unrelated code or create noisy formatting-only diffs.
+- KISS and YAGNI: fewest components and states that work; no abstractions for speculative needs. Explain any necessary complexity.
+- Cover the main flow and common cases; handle edge cases only when reasonably likely or high-impact.
+- Reuse existing structures, APIs, libraries, and terminology. Prefer localized changes; do not refactor unrelated code.
+- Do not expand public APIs merely to make testing easier.
+- Do not edit generated code; change its source or generator.
 
-## Language Conventions
+## Applying Conventions
 
-- Use Traditional Chinese for responses, explanations, comments, and work records unless the project or user explicitly specifies otherwise.
-- Use English for code identifiers; retain established technical names and project terminology. Name variables, parameters, fields, and named return values in the singular, including collections.
-- Comments should explain reasons, constraints, and non-obvious intent, rather than narrating each line.
-- Where suitable, use `itor` as a general iteration variable and `k, v` for map key/value iteration.
-- Do not edit generated code directly; update its source or generation process.
-- **For Go changes, read `references/go.md`. For C# changes, read `references/csharp.md`.** Load only the language references relevant to this task. Follow more specific project rules where they differ.
+- The conventions below apply to lines you write or modify. Do not convert untouched lines, even in the same function, and do not create formatting-only diffs — unless the user explicitly asks to apply the conventions to existing code.
+- More specific project rules (instructions, linter/formatter config) take precedence. If a project linter rejects a convention below, follow the linter and mention the conflict in the report.
+
+## General Conventions
+
+- Use Traditional Chinese for responses, code comments, and work records unless the project or user specifies otherwise.
+- Use English identifiers; keep established technical names and project terminology.
+- Name variables, parameters, fields, and named return values in the singular, **including collections**:
+  `user := []User{}`, `List<Order> order`, `func load() (item []Item, err error)`.
+- Use `itor` for a loop element when there is no more specific domain name; use `k, v` for map key/value:
+  `for _, itor := range user { ... }`, `for k, v := range score { ... }`, `foreach (var itor in order) { ... }`.
+- Comments explain reasons, constraints, and non-obvious intent, not what each line does.
+
+## Go and C# Conventions
+
+- Test true directly and false explicitly — never `== true`, never `!`:
+  `if ready { ... }` / `if (ready) { ... }`; `if ready == false { ... }` / `if (ready == false) { ... }`.
+- Always add a closing comment naming the keyword at the end of every control-flow block (`if`, `for`, `foreach`, `while`, `switch`, `select`, `try`, etc.), regardless of length: `} // if`, `} // for`, `} // switch`.
+  For an `if`/`else` chain, add it only after the final branch. Never add one at the end of a function, method, type, or closure.
+
+## Go Conventions
+
+- Always use a parenthesized `import` block, even for one package.
+- Multiple return values: name every one, e.g. `func parse(s string) (result Config, err error)`. Single return value: unnamed, e.g. `func count() int`.
+- Filenames: lowercase for one word (`server.go`), lowerCamelCase for compound names (`commandMove.go`, `commandMove_test.go`).
+- Order type-related declarations as: type definition → constructor → methods.
 
 ## Workflow
 
-1. **Inspect:** Read relevant requirements, code, existing tests, and project instructions. Check the working tree before editing; preserve unrelated existing changes.
-2. **Plan minimally:** Determine the smallest sound change. Do not expand public APIs merely to make testing easier.
-3. **Implement:** Modify only relevant files and necessary dependent code. Keep unrelated formatting and ordering unchanged.
-4. **Verify:** Run applicable existing tests, linters, builds, or checks for the change. Do not invent commands or claim unrun checks passed.
-5. **Report:** Summarize the change, executed checks and results, failures or limitations, and unresolved issues.
+1. **Inspect:** Read relevant requirements, code, tests, and project instructions. Check the working tree first; preserve unrelated existing changes.
+2. **Implement:** Make the smallest sound change; touch only relevant files.
+3. **Verify:** Run the existing tests, linters, and builds relevant to the change. Never invent commands or claim unrun checks passed.
+4. **Report:** Summarize the change, checks run and their results, failures, limitations, and open issues.
 
 ## Verification and Safety
 
-- If verification fails, distinguish failures caused by this change from pre-existing problems; do not fix unrelated problems just to obtain a passing result.
-- If a test disagrees with a confirmed authoritative specification, use that specification to determine whether the test or implementation needs correction. Do not silently change requirements.
-- Never overwrite, restore, or delete another person's unrelated work.
-- Keep temporary scripts and artifacts grouped in the project's designated temporary directory. If none exists, use a task-specific temporary location only when needed; clean up only artifacts created for this task. Do not assume a directory is Git-ignored.
+- When verification fails, separate failures caused by this change from pre-existing ones; do not fix unrelated problems to get a green result.
+- If a test contradicts a confirmed authoritative specification, use the specification to decide whether the test or the code is wrong. Do not silently change requirements.
+- Keep temporary scripts and artifacts in the project's designated temp directory, or a task-specific temp location if none exists; clean up only what this task created. Do not assume a directory is Git-ignored.
 - Do not commit, push, rebase, reset, or merge unless explicitly authorized.
 - If the user requests analysis only, do not modify files.

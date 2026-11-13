@@ -6,7 +6,7 @@
 
 - 遵循 KISS、YAGNI，不為假設中的未來需求過度設計。
 - 優先沿用現有程式架構、API、套件與術語，不順便重構無關程式。
-- 保留個人通用編碼偏好；Go 與 C# 的詳細規範僅在處理對應語言時讀取。
+- 收錄個人編碼偏好（單數命名、`itor`、bool 判斷寫法、Go 檔名與回傳值等），並附範例。
 - 執行與本次變更相關的測試、lint、build，明確回報真正執行的檢查結果。
 - 保護既有工作樹與其他任務的暫存資料；未授權不進行 Git 歷史或遠端變更。
 
@@ -18,17 +18,14 @@ CodeCraft/
 ├── CHANGELOG.md
 └── skills/
     └── code-craft/
-        ├── SKILL.md
-        └── references/
-            ├── go.md
-            └── csharp.md
+        └── SKILL.md
 ```
 
-主 `SKILL.md` 放所有語言共通的實作流程；`references/go.md` 與 `references/csharp.md` 放各語言獨有規則。這樣只修改 Go 時不需要讀取 C# 規則，減少無關的上下文負擔。
+所有規則集中在單一 `SKILL.md`（約 1,000 tokens）。語言規則目前篇幅很小，拆成獨立檔案省下的 Token 有限，反而多一次讀檔，也可能被模型漏讀；日後某語言規則明顯變長時，再拆到 `references/`。
 
 ## 安裝
 
-將 `skills/code-craft/` **整個資料夾（包含 `references/`）**複製到所使用工具的 Skill 目錄：
+將 `skills/code-craft/` **整個資料夾**複製到所使用工具的 Skill 目錄：
 
 | 工具 | 個人 Skill 目錄 | 專案 Skill 目錄 |
 | --- | --- | --- |
@@ -37,7 +34,9 @@ CodeCraft/
 
 安裝完成後，目錄應是 `~/.claude/skills/code-craft/SKILL.md` 或 `~/.agents/skills/code-craft/SKILL.md`。路徑與載入方式請以使用中的工具版本為準。
 
-若要建立 GitHub Repository `CodeCraft`，請把 ZIP 解壓縮後，將 `CodeCraft/` **內部內容**放到 Repository 根目錄。
+### 回覆語言建議
+
+Skill 只有在觸發後才會生效，因此「以繁體中文回覆」在未觸發 Skill 的對話中不會套用。若希望每次對話都使用繁體中文，建議另外寫進 `~/.claude/CLAUDE.md`（Claude Code）或 `AGENTS.md`（Codex）。
 
 ## 使用範例
 
@@ -56,6 +55,6 @@ CodeCraft 可以獨立安裝，不強制依賴其他 Skill。專案有更明確�
 
 ## 維護
 
-- 初版版本：`v0.1.0`，尚未經 Claude Code 或 Codex 實際功能測試。
-- 發布新版本前，建議測試：Go / C# 語言規則按需載入、最小修改、驗證失敗處理、分析模式不改檔、Git 操作授權。
+- 目前版本：`v0.2.0`，尚未經 Claude Code 或 Codex 實際功能測試。
+- 發布新版本前，建議測試：單數命名與 `itor` 是否確實套用、lint 衝突處理、最小修改、驗證失敗處理、分析模式不改檔、Git 操作授權。
 - 未預先加入 `LICENSE`；公開授權方式由 Repository 擁有人決定。
