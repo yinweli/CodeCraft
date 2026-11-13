@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- 新增原則：不從假設情境推演第二層、第三層需求；不影響目前決策或實作的問題不主動展開。
+
 ## v0.2.0 — 2026-11-13
 
 - 將 `references/go.md`、`references/csharp.md` 併回 `SKILL.md`，避免多一次讀檔與漏讀規則。

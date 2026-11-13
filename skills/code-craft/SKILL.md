@@ -14,6 +14,7 @@ Implement only the requested change, following the project's existing design and
 ## Principles
 
 - KISS and YAGNI: fewest components and states that work; no abstractions for speculative needs. Explain any necessary complexity.
+- Do not extrapolate second- or third-order requirements from hypothetical scenarios. Leave questions that do not affect the current decision or implementation unexplored.
 - Cover the main flow and common cases; handle edge cases only when reasonably likely or high-impact.
 - Reuse existing structures, APIs, libraries, and terminology. Prefer localized changes; do not refactor unrelated code.
 - Do not expand public APIs merely to make testing easier.
